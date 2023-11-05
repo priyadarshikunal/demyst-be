@@ -49,14 +49,19 @@ app.get("/balancesheet/:applicationId", (req, res) => {
   const loanAmount = req.query["loanAmount"];
   const businessId = req.query["businessId"];
   const accountingProvider = req.query["accountingProvider"];
-  console.log(applicationId);
+  const application = db.get(applicationId);
+  application.loanAmount=loanAmount;
+  application.businessId = businessId;
+  application.accountingProvider = accountingProvider;
+  application.sheet = sheet;
   res.json(sheet);
 });
 
-app.post("/submit", (req, res) => {
-  const loanAmount = req.body.loanAmount;
-  const balancesheet = req.body.balancesheet;
-  res.json({ outcome: "Rejected", loanAmount, balancesheet });
+app.get("/outcome/:applicationId", (req, res) => {
+  const applicationId = req.params.applicationId;
+  console.log(`Outcome for ${applicationId}`);
+  // Mock a decision engine here
+  res.json({ outcome: "FooBar"});
 });
 
 app.listen(port, () => {
