@@ -1,4 +1,9 @@
-export const sheet = [
+export const getSheetFromProvider = (provider: string) => {
+    // The sheet is mocked out here. Should come from accounting provider.
+    console.log(provider);
+    return sheet;
+}
+const sheet = [
     {
         "year": 2020,
         "month": 12,

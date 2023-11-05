@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import crypto from "crypto";
 import cors from 'cors';
-import { sheet } from "./sheet";
+import { getSheetFromProvider } from "./sheet";
 
 dotenv.config();
 const port = process.env.PORT;
@@ -45,23 +45,26 @@ app.get("/init", (req: Request, res: Response) => {
 });
 
 app.get("/balancesheet/:applicationId", (req, res) => {
-  const applicationId = req.params["applicationId"];
-  const loanAmount = req.query["loanAmount"];
-  const businessId = req.query["businessId"];
-  const accountingProvider = req.query["accountingProvider"];
+  const applicationId = req.params["applicationId"]!;
+  const loanAmount = req.query["loanAmount"]!;
+  const businessId = req.query["businessId"]!;
+  const accountingProvider = req.query["accountingProvider"]!;
   const application = db.get(applicationId);
   application.loanAmount=loanAmount;
   application.businessId = businessId;
   application.accountingProvider = accountingProvider;
-  application.sheet = sheet;
-  res.json(sheet);
+  application.sheet = getSheetFromProvider(accountingProvider.toString());
+  res.json(application.sheet);
 });
 
 app.get("/outcome/:applicationId", (req, res) => {
   const applicationId = req.params.applicationId;
+  const application = db.get(applicationId)
   console.log(`Outcome for ${applicationId}`);
+  // Apply rules to summarize the application
+
   // Mock a decision engine here
-  res.json({ outcome: "FooBar"});
+  res.json({ outcome: JSON.stringify(application)});
 });
 
 app.listen(port, () => {
