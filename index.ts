@@ -44,10 +44,12 @@ app.get("/init", (req: Request, res: Response) => {
   res.json({ id: uuid });
 });
 
-app.get("/balancesheet", (req, res) => {
+app.get("/balancesheet/:applicationId", (req, res) => {
+  const applicationId = req.params["applicationId"];
   const loanAmount = req.query["loanAmount"];
   const businessId = req.query["businessId"];
   const accountingProvider = req.query["accountingProvider"];
+  console.log(applicationId);
   res.json(sheet);
 });
 
